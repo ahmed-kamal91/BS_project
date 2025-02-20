@@ -1,4 +1,4 @@
-function fetchTotalProducts(catName) {
+function fetchTotalNumByCat(catName) {
 
     return fetch(`https://dummyjson.com/products/category/${catName}?select=id`)
         .then(response => response.json())
@@ -12,16 +12,47 @@ function fetchTotalProducts(catName) {
         });
 }
 
+function fetchTotalNumAll(){
+
+    return fetch(`https://dummyjson.com/products?limit=1`)
+    .then(response => response.json())
+    .then(data => {
+        console.log("Total products:", data.total);
+        return data.total; 
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        return 0;
+    });
+
+}
+
+
+
 async function getPageArray(currentPage) {
+
+    // URL: get catName
     let params = new URLSearchParams(window.location.search);
     let catName = params.get("catName"); 
 
-    let totalProducts = await fetchTotalProducts(catName); 
+    var totalProducts;
+
+    //-----DEBUG----
+    console.log("-------------------------catName = ", catName);
+    //--------------
+
+    // CHECK CATEGORY
+    if(catName == "All")
+        { totalProducts = await fetchTotalNumAll();}
+    else 
+        {totalProducts = await fetchTotalNumByCat(catName); }
+    
+
     let totalPages = Math.ceil(totalProducts / 12);
 
     // Handle case where there is only one page
     if (totalPages === 1) {
-        return ["«", 1, "»"];  // Keep navigation but show only "1"
+        return ["«", 1, "»"]; 
     }
 
     let pages = [];

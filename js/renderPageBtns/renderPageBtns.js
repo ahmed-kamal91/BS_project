@@ -7,6 +7,8 @@ import { getPageArray } from "./H_renderPageBtns.js";
 
 //Change current page in URL
 function updateCurrentPageInURL(newPage) {
+
+    // URL : update
     let url = new URL(window.location.href);
     url.searchParams.set("currentPage", newPage);
     window.history.replaceState({}, "", url);
